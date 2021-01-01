@@ -26,7 +26,7 @@ class ib_thread
 		return $val;
 	}
 
-	private static function &combine_post_data(&$post, &$users)
+	private static function combine_post_data($post, $users)
 	{
 		if (isset($post))
 		{
@@ -48,10 +48,19 @@ class ib_thread
 			$where[] = ['masked', 'eq', 0];
 		}
 
+		if (!$opts['show_all'])
+		{
+			$where[] = ['status', 'eq', 0];
+		}
+		else if ($opts['show_all'] == -1)
+		{
+			$where[] = ['status', 'notEq', 0];
+		}
+
 		$page = self::intval_gt0($opts['page']);
 		$per_page = self::intval_gt0($opts['per_page']);
 
-		$list = AWS_APP::model()->fetch_page('imageboard_index', $where, 'sort DESC, status ASC, last_post_id DESC', $page, $per_page);
+		$list = AWS_APP::model()->fetch_page('imageboard_index', $where, 'sort DESC, last_post_id DESC', $page, $per_page);
 		self::$_total_threads = AWS_APP::model()->total_rows();
 		if (!$list)
 		{
@@ -96,7 +105,13 @@ class ib_thread
 		}
 		//$post_ids = array_unique($post_ids);
 
-		$post_list = AWS_APP::model()->fetch_all('imageboard_post', ['id', 'in', $post_ids]);
+		$where2[] = ['id', 'in', $post_ids];
+		if (!$opts['show_all'])
+		{
+			$where2[] = ['status', 'eq', 0];
+		}
+
+		$post_list = AWS_APP::model()->fetch_all('imageboard_post', $where2);
 		if (!$post_list)
 		{
 			return array();
@@ -122,10 +137,13 @@ class ib_thread
 
 		foreach ($list as $key => $val)
 		{
-			$list[$key]['thread'] = &self::combine_post_data($posts[$val['thread_id']], $users);
+			$list[$key]['thread'] = self::combine_post_data($posts[$val['thread_id']], $users);
 			foreach ($val['recent_reply_ids'] as $reply_id)
 			{
-				$list[$key]['replies'][] = &self::combine_post_data($posts[$reply_id], $users);
+				if ($reply = self::combine_post_data($posts[$reply_id], $users))
+				{
+					$list[$key]['replies'][] = $reply;
+				}
 			}
 		}
 
@@ -145,15 +163,24 @@ class ib_thread
 
 		$thread_id = $item['thread_id'];
 
+		$where[] = ['thread_id', 'eq', $thread_id]; // replies
+		if (!$opts['show_all'])
+		{
+			$where[] = ['status', 'eq', 0];
+		}
+		else if ($opts['show_all'] == -1)
+		{
+			$where[] = ['status', 'notEq', 0];
+		}
+
 		if ($page == 1)
 		{
 			// 第一页同时获取主串和回复
+			$where[] = 'or';
+			$where[] = ['id', 'eq', $thread_id];
+
 			$per_page += 1;
-			$where = [
-				['id', 'eq', $thread_id],
-				'or',
-				['thread_id', 'eq', $thread_id],
-			];
+
 			$post_list = AWS_APP::model()->fetch_page('imageboard_post', $where, 'thread_id ASC, id ASC', $page, $per_page);
 			if (!$post_list)
 			{
@@ -171,14 +198,13 @@ class ib_thread
 		}
 		else
 		{
-			$where = ['thread_id', 'eq', $thread_id];
 			$replies = AWS_APP::model()->fetch_page('imageboard_post', $where, 'id ASC', $page, $per_page);
 			if (!$replies)
 			{
 				return array();
 			}
-			$where = ['id', 'eq', $thread_id];
-			$thread = AWS_APP::model()->fetch_row('imageboard_post', $where);
+
+			$thread = AWS_APP::model()->fetch_row('imageboard_post', ['id', 'eq', $thread_id]);
 			if (!$thread)
 			{
 				$thread = array();
@@ -208,12 +234,11 @@ class ib_thread
 			$users = array();
 		}
 
-		foreach ($item['replies'] AS $key => &$value)
+		foreach ($item['replies'] AS $key => $value)
 		{
-			self::combine_post_data($value, $users);
+			$item['replies'][$key] = self::combine_post_data($value, $users);
 		}
-		//unset($value);
-		self::combine_post_data($item['thread'], $users);
+		$item['thread'] = self::combine_post_data($item['thread'], $users);
 
 		return $item;
 	}

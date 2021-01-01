@@ -43,6 +43,7 @@ class main extends AWS_CONTROLLER
 			'page' => $_GET['page'],
 			'per_page' => $per_page,
 			'is_mod' => ib_h::is_mod($this->user_info),
+			'show_all' => $_GET['show_all'],
 			'recent_replies_per_thread' => S::get('imageboard_recent_replies_per_thread'),
 		));
 
@@ -52,7 +53,7 @@ class main extends AWS_CONTROLLER
 		}
 
 		TPL::assign('pagination', AWS_APP::pagination()->create(array(
-			'base_url' => ib_h::url('/'),
+			'base_url' => ib_h::url('/') . ($_GET['show_all'] ? 'show_all-' . intval($_GET['show_all']) : ''),
 			'total_rows' => ib_thread::count(),
 			'per_page' => $per_page,
 			'num_links' => 19
@@ -73,6 +74,7 @@ class main extends AWS_CONTROLLER
 			'page' => $_GET['page'],
 			'per_page' => $per_page,
 			'is_mod' => ib_h::is_mod($this->user_info),
+			'show_all' => $_GET['show_all'],
 		));
 
 		if (!$item)
@@ -81,7 +83,7 @@ class main extends AWS_CONTROLLER
 		}
 
 		TPL::assign('pagination', AWS_APP::pagination()->create(array(
-			'base_url' => ib_h::url('/thread/id-') . intval($_GET['id']),
+			'base_url' => ib_h::url('/thread/id-') . intval($_GET['id']) . ($_GET['show_all'] ? '__show_all-' . intval($_GET['show_all']) : ''),
 			'total_rows' => intval($item['reply_count']),
 			'per_page' => $per_page,
 			'num_links' => 19

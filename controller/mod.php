@@ -71,26 +71,7 @@ class mod extends AWS_CONTROLLER
 		}
 		ib_post::batch($_POST['ids'], $_POST['status']);
 
-		$thread_id = intval($_POST['thread_id']);
-		$page = intval($_POST['page']);
-		if ($thread_id > 0)
-		{
-			$url = '/thread/id-' . $thread_id;
-			if ($page > 1)
-			{
-				$url .= '__page-' . $page;
-			}
-		}
-		else
-		{
-			$url = "/";
-			if ($page > 1)
-			{
-				$url .= 'page-' . $page;
-			}
-		}
-
-		ib_h::redirect($url);
+		ib_h::redirect($_SERVER['HTTP_REFERER']);
 	}
 
 	public function post_action()

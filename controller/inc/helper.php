@@ -40,7 +40,7 @@ class ib_h
 
 	public static function redirect_msg($message, $url = NULL, $interval = 5)
 	{
-		if ($url)
+		if ($url AND !is_website($url))
 		{
 			$url = self::app_dir() . $url;
 		}
@@ -53,7 +53,10 @@ class ib_h
 		{
 			$url = '/';
 		}
-		$url = self::app_dir() . $url;
+		if (!is_website($url))
+		{
+			$url = self::app_dir() . $url;
+		}
 		HTTP::redirect($url);
 	}
 
