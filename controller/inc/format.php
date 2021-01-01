@@ -58,11 +58,19 @@ class ib_fmt
 		{
 			return '';
 		}
-		return $item['title'] . '<br><br>' . FORMAT::bbcode($item['message']);
+		return safe_text($item['title'] . "\r\n\r\n" . $item['message']);
 	}
 
 	public static function subject(&$post)
 	{
+		if (!$post['status'])
+		{
+			if (S::content_contains('imageboard_post_replacing_keywords', $post['subject'] . $post['body'], true))
+			{
+				$post['status'] = 2;
+			}
+		}
+
 		if ($post['status'] == 2)
 		{
 			$post['file_type'] = 0;
@@ -75,6 +83,7 @@ class ib_fmt
 			$post['body'] = '';
 			return '<s>已刪除</s>';
 		}
+
 		if (!!$post['subject'])
 		{
 			return safe_text($post['subject']);
