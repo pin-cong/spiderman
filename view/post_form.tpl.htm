@@ -33,4 +33,12 @@
 			</select>
 		</td>
 	</tr>
+<?php if (ib_h::need_captcha($this->user_info)) { ?>
+	<tr>
+		<th>驗證碼</th>
+		<td>
+			<div class="h-captcha" data-sitekey="<?php echo S::get('imageboard_hcaptcha_sitekey'); ?>"></div>
+		</td>
+	</tr>
+<?php } ?>
 </table>

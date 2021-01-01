@@ -76,6 +76,28 @@ class ib_h
 		return in_array($user_info['user_group_id'], $group_ids);
 	}
 
+	public static function need_captcha($user_info)
+	{
+		static $reputation_lt;
+		if (!isset($reputation_lt))
+		{
+			$reputation_lt = S::get('imageboard_captcha_reputation_lt');
+		}
+		if (!is_numeric($reputation_lt))
+		{
+			return false;
+		}
+		if (!$user_info['uid'])
+		{
+			return true;
+		}
+		if (!is_numeric($user_info['reputation']))
+		{
+			return true;
+		}
+		return ($user_info['reputation'] < $reputation_lt);
+	}
+
 	public static function build_page_title($text = '')
 	{
 		if ($text)

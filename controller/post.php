@@ -21,6 +21,7 @@ if (!defined('IN_ANWSION'))
 require_once 'inc/helper.php';
 require_once 'inc/thread.php';
 require_once 'inc/post.php';
+require_once 'inc/hcaptcha.php';
 
 class post extends AWS_CONTROLLER
 {
@@ -131,7 +132,15 @@ class post extends AWS_CONTROLLER
 
 	private function check_interval()
 	{
-		if (!check_user_operation_interval('imageboard_post', $this->user_id, $this->user_info['permission']['interval_post']))
+		if (!$this->user_id)
+		{
+			$interval = S::get('imageboard_anonymous_interval_post');
+		}
+		else
+		{
+			$interval = $this->user_info['permission']['interval_post'];
+		}
+		if (!check_user_operation_interval('imageboard_post', $this->user_id, $interval))
 		{
 			ib_h::redirect_msg('太快了');
 		}
@@ -157,7 +166,14 @@ class post extends AWS_CONTROLLER
 
 	private function check_captcha()
 	{
-
+		if (!ib_h::need_captcha($this->user_info))
+		{
+			return;
+		}
+		if (!ib_hcaptcha::check())
+		{
+			ib_h::redirect_msg('驗證碼');
+		}
 	}
 
 	private function cache_captcha()
@@ -166,5 +182,4 @@ class post extends AWS_CONTROLLER
 	}
 
 }
-
 
