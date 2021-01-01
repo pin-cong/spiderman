@@ -29,7 +29,7 @@ class admin extends AWS_CONTROLLER
 	{
 		if (!$this->user_info['permission']['is_moderator'])
 		{
-			HTTP::error_403();
+			H::error_403();
 		}
 
 		$this->setting_fields = array(

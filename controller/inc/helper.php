@@ -57,7 +57,7 @@ class ib_h
 		{
 			$url = self::app_dir() . $url;
 		}
-		HTTP::redirect($url);
+		H::redirect($url);
 	}
 
 	public static function is_mod($user_info)

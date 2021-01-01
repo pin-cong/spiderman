@@ -29,7 +29,7 @@ class mod extends AWS_CONTROLLER
 	{
 		if (!ib_h::is_mod($this->user_info))
 		{
-			HTTP::error_403();
+			H::error_403();
 		}
 
 		$this->setting_fields = array(

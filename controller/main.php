@@ -49,7 +49,7 @@ class main extends AWS_CONTROLLER
 
 		if (!$items AND !!$_GET['page'])
 		{
-			HTTP::error_404();
+			H::error_404();
 		}
 
 		TPL::assign('pagination', AWS_APP::pagination()->create(array(
@@ -79,7 +79,7 @@ class main extends AWS_CONTROLLER
 
 		if (!$item)
 		{
-			HTTP::error_404();
+			H::error_404();
 		}
 
 		TPL::assign('pagination', AWS_APP::pagination()->create(array(
