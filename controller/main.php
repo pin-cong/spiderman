@@ -40,20 +40,20 @@ class main extends AWS_CONTROLLER
 		if ($per_page < 1) $per_page = 50;
 
 		$items = ib_thread::list(array(
-			'page' => $_GET['page'],
+			'page' => H::GET('page'),
 			'per_page' => $per_page,
 			'is_mod' => ib_h::is_mod($this->user_info),
-			'show_all' => $_GET['show_all'],
+			'show_all' => H::GET('show_all'),
 			'recent_replies_per_thread' => S::get('imageboard_recent_replies_per_thread'),
 		));
 
-		if (!$items AND !!$_GET['page'])
+		if (!$items AND !!H::GET('page'))
 		{
 			H::error_404();
 		}
 
 		TPL::assign('pagination', AWS_APP::pagination()->create(array(
-			'base_url' => ib_h::url('/') . ($_GET['show_all'] ? 'show_all-' . intval($_GET['show_all']) : ''),
+			'base_url' => ib_h::url('/') . (H::GET('show_all') ? 'show_all-' . intval(H::GET('show_all')) : ''),
 			'total_rows' => ib_thread::count(),
 			'per_page' => $per_page,
 			'num_links' => 19
@@ -70,11 +70,11 @@ class main extends AWS_CONTROLLER
 		if ($per_page < 1) $per_page = 50;
 
 		$item = ib_thread::get(array(
-			'id' => $_GET['id'],
-			'page' => $_GET['page'],
+			'id' => H::GET('id'),
+			'page' => H::GET('page'),
 			'per_page' => $per_page,
 			'is_mod' => ib_h::is_mod($this->user_info),
-			'show_all' => $_GET['show_all'],
+			'show_all' => H::GET('show_all'),
 		));
 
 		if (!$item)
@@ -83,7 +83,7 @@ class main extends AWS_CONTROLLER
 		}
 
 		TPL::assign('pagination', AWS_APP::pagination()->create(array(
-			'base_url' => ib_h::url('/thread/id-') . intval($_GET['id']) . ($_GET['show_all'] ? '__show_all-' . intval($_GET['show_all']) : ''),
+			'base_url' => ib_h::url('/thread/id-') . intval(H::GET('id')) . (H::GET('show_all') ? '__show_all-' . intval(H::GET('show_all')) : ''),
 			'total_rows' => intval($item['reply_count']),
 			'per_page' => $per_page,
 			'num_links' => 19

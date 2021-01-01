@@ -65,7 +65,7 @@ class post extends AWS_CONTROLLER
 		$this->check_duplicate($data);
 
 		$item = ib_thread::info(array(
-			'id' => $_POST['thread_id'],
+			'id' => H::POST('thread_id'),
 			'is_mod' => ib_h::is_mod($this->user_info),
 		));
 		if (!$item)
@@ -76,6 +76,8 @@ class post extends AWS_CONTROLLER
 		{
 			ib_h::redirect_msg('串已鎖');
 		}
+
+		$this->check_thread_time($item['thread_id']);
 
 		$this->check_captcha();
 		$this->get_uid($data);
@@ -96,12 +98,12 @@ class post extends AWS_CONTROLLER
 
 	private function get_content(&$data)
 	{
-		$data['subject'] = trim($_POST['subject']);
+		$data['subject'] = H::POST_S('subject');
 		if (iconv_strlen($data['subject']) > 150)
 		{
 			ib_h::redirect_msg('標題太長');
 		}
-		$data['body'] = trim($_POST['body']);
+		$data['body'] = H::POST_S('body');
 		if (!$data['body'])
 		{
 			ib_h::redirect_msg('請填寫');
@@ -119,7 +121,7 @@ class post extends AWS_CONTROLLER
 		{
 			return;
 		}
-		if ($_POST['anonymous'])
+		if (H::POST_I('anonymous'))
 		{
 			$reputation_lt = S::get('imageboard_disallow_anonymous_reputation_lt');
 			if (is_numeric($reputation_lt) AND $this->user_info['reputation'] < $reputation_lt)
@@ -185,6 +187,26 @@ class post extends AWS_CONTROLLER
 	private function cache_captcha()
 	{
 
+	}
+
+	private function check_thread_time($post_id)
+	{
+		$days = S::get_int('imageboard_thread_expiration_days');
+		if (!$days)
+		{
+			return;
+		}
+
+		if ($post = ib_post::get($post_id))
+		{
+			$seconds = $days * 24 * 3600;
+			$time_before = real_time() - $seconds;
+
+			if (intval($post['time']) < $time_before)
+			{
+				ib_h::redirect_msg('已失去時效性');
+			}
+		}
 	}
 
 }

@@ -53,9 +53,9 @@ class mod extends AWS_CONTROLLER
 		$fields = array();
 		foreach ($this->setting_fields AS $key => $val)
 		{
-			if (isset($_POST[$key]))
+			if (!is_null(H::POST_S($key)))
 			{
-				$fields[$key] = $_POST[$key];
+				$fields[$key] = H::POST_S($key);
 			}
 		}
 		$this->model('setting')->set_vars($fields);
@@ -65,11 +65,11 @@ class mod extends AWS_CONTROLLER
 
 	public function batch_action()
 	{
-		if (!isset($_POST['ids']) OR !isset($_POST['status']) OR !in_array($_POST['status'], array(0, 1, 2)))
+		if (is_null(H::POST('ids')) OR is_null(H::POST('status')) OR !in_array(H::POST('status'), array(0, 1, 2)))
 		{
 			ib_h::redirect_msg('請選擇');
 		}
-		ib_post::batch($_POST['ids'], $_POST['status']);
+		ib_post::batch(H::POST('ids'), H::POST('status'));
 
 		ib_h::redirect($_SERVER['HTTP_REFERER']);
 	}

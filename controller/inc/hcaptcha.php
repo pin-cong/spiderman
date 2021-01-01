@@ -16,7 +16,7 @@ class ib_hcaptcha
 {
 	public static function check()
 	{
-		$token = $_POST['h-captcha-response'];
+		$token = H::POST_S('h-captcha-response');
 		if (!$token)
 		{
 			return false;

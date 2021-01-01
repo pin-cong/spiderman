@@ -49,10 +49,11 @@ class admin extends AWS_CONTROLLER
 			'imageboard_post_replacing_limit' => '替換全文次數限制',
 			'imageboard_anonymous_interval_post' => '匿名用戶發串冷卻秒數',
 			'imageboard_captcha_reputation_lt' => '聲望小於多少需要驗證碼 (留空則不開啟)',
+			'imageboard_disallow_anonymous_reputation_lt' => '聲望小於多少不允許匿名 (留空則不開啟)',
+			'imageboard_thread_expiration_days' => '禁止回覆多少天以前的串 (留空則不開啟)',
 			'imageboard_hcaptcha_sitekey' => 'hcaptcha sitekey',
 			'imageboard_hcaptcha_secret' => 'hcaptcha secret',
 			'imageboard_hcaptcha_hostname' => 'hcaptcha hostname',
-			'imageboard_disallow_anonymous_reputation_lt' => '聲望小於多少不允許匿名 (留空則不開啟)',
 		);
 	}
 
@@ -71,9 +72,9 @@ class admin extends AWS_CONTROLLER
 		$fields = array();
 		foreach ($this->setting_fields AS $key => $val)
 		{
-			if (isset($_POST[$key]))
+			if (!is_null(H::POST_S($key)))
 			{
-				$fields[$key] = $_POST[$key];
+				$fields[$key] = H::POST_S($key);
 			}
 		}
 		$this->model('setting')->set_vars($fields);
@@ -83,9 +84,9 @@ class admin extends AWS_CONTROLLER
 
 	public function rebuild_index_action()
 	{
-		$page = intval($_GET['page']);
+		$page = H::GET_I('page');
 		if ($page < 1) $page = 1;
-		$per_page = intval($_GET['per_page']);
+		$per_page = H::GET_I('per_page');
 		if ($per_page < 1) $per_page = 100;
 
 		$recent_replies_per_thread = S::get('imageboard_recent_replies_per_thread');
