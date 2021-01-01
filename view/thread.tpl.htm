@@ -16,13 +16,17 @@
 <?php TPL::include('post_form', 'imageboard'); ?>
 </form>
 
+<section>
 <hr>
 	<?php TPL::include('user', 'imageboard'); ?>
 <hr>
+</section>
 
 <form action="<?php echo ib_h::url(); ?>/mod/batch/" method="post">
 <?php $this->items[] = $this->item; ?>
+<section>
 <?php TPL::include('post_list', 'imageboard'); ?>
+</section>
 
 <div class="bar bottom">
 	<div class="pages">

@@ -2,7 +2,7 @@
 <?php $thread = $item['thread']; ?>
 <?php $thread_url = ib_h::url('/thread/' . $thread['id']); ?>
 <?php $pid = $thread['id']; ?>
-<div id="post_<?php echo $pid; ?>">
+<div id="<?php echo $pid; ?>">
 
 	<div class="post op">
 		<p class="intro">
@@ -12,7 +12,7 @@
 				<span class="name"><?php echo ib_fmt::name($thread); ?></span>
 				<time><?php echo ib_fmt::time($thread); ?></time>
 			</label>
-			<a class="post_no" href="#post_<?php echo $pid; ?>">No.</a><a class="post_no" href="#post_<?php echo $pid; ?>"><?php echo $pid; ?></a>
+			<a class="post_no" href="<?php echo $thread_url; ?>#q<?php echo $pid; ?>" data-id="<?php echo $pid; ?>">No.<?php echo $pid; ?></a>
 			<?php if (!$this->thread_id) { ?>
 			<a href="<?php echo $thread_url; ?>">[回應]</a>
 			<?php } ?>
@@ -30,7 +30,7 @@
 <?php foreach ($item['replies'] as $reply) { ?>
 <?php $pid = $reply['id']; ?>
 
-	<div class="post reply" id="post_<?php echo $pid; ?>">
+	<div class="post reply" id="<?php echo $pid; ?>">
 		<p class="intro">
 			<input type="checkbox" class="delete" name="ids[]" value="<?php echo $pid; ?>" id="select_<?php echo $pid; ?>">
 			<label for="select_<?php echo $pid; ?>">
@@ -38,7 +38,7 @@
 				<span class="name"><?php echo ib_fmt::name($reply); ?></span>
 				<time><?php echo ib_fmt::time($reply); ?></time>
 			</label>
-			<a class="post_no" href="#post_<?php echo $pid; ?>">No.</a><a class="post_no" href="#post_<?php echo $pid; ?>"><?php echo $pid; ?></a>
+			<a class="post_no" href="<?php echo $thread_url; ?>#q<?php echo $pid; ?>" data-id="<?php echo $pid; ?>">No.<?php echo $pid; ?></a>
 		</p>
 		<?php if ($reply['file_type'] == 1) { ?>
 		<div class="file">
@@ -56,3 +56,27 @@
 	<hr>
 </div>
 <?php } ?>
+
+<script>
+$(document).ready(function () {
+	function q(id) {
+		var field=$('form textarea[name=body]'),text=field.val().trim();
+		if (text)text+='\n';
+		text+='>>';
+		text+=id;
+		text+='\n';
+		field.val(text);
+		$(window).scrollTop(0);
+	}
+
+	if (window.location.hash.indexOf('q') == 1)
+		q(window.location.hash.substring(2));
+
+<?php if (!!$this->thread_id) { ?>
+	$('a.post_no').click(function () {
+		q($(this).data('id'));
+		return false;
+	});
+<?php } ?>
+});
+</script>

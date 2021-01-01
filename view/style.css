@@ -1,6 +1,8 @@
 html, body {
   max-width: 100%!important;
   overflow-x: hidden!important;
+  margin: 0;
+  padding: 0;
 }
 body {
   background-color: #EEF2FF;
@@ -8,9 +10,10 @@ body {
   font-family: arial,helvetica,sans-serif;
   font-size: 10pt;
   word-break: break-word;
+}
+section {
   margin: 0 4px;
-  padding-left: 4px;
-  padding-right: 4px;
+  padding: 0 4px;
 }
 header {
   margin: 3em 0;
@@ -39,10 +42,7 @@ header div.subtitle {
 }
 .bar {
   display: table!important;
-  position: fixed;
   width: 100%;
-  left: 0px;
-  z-index: 3;
   background-color: #D6DAF0;
   border-color: #B7C5D9;
 }
@@ -51,10 +51,12 @@ header div.subtitle {
   vertical-align: middle;
 }
 .bar.top {
-  top: 0px;
   border-bottom: 1px solid #B7C5D9;
 }
 .bar.bottom {
+  position: fixed;
+  z-index: 3;
+  left: 0px;
   bottom: 0px;
   border-top: 1px solid #333333;
 }
@@ -237,6 +239,9 @@ span.trip {
 }
 .quote {
   color: #789922;
+}
+div.post div.body a {
+  color: #D00;
 }
 span.omitted {
   display: block;

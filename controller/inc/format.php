@@ -113,9 +113,11 @@ class ib_fmt
 	{
 		if (!!$post['uid'])
 		{
-			if (!!$post['user_info'] AND !!$post['user_info']['user_name'])
+			if (!!$post['user_info'])
 			{
-				return safe_text($post['user_info']['user_name']);
+				$url = url_rewrite('/people/') . $post['user_info']['url_token'];
+				$name = $post['user_info']['user_name'];
+				return '<a href="' . safe_text($url) . '">' . safe_text($name) . '</a>';
 			}
 		}
 		return '無名';
@@ -131,7 +133,10 @@ class ib_fmt
 			}
 			else
 			{
-				return nl2br(safe_text($post['body']));
+				$text = nl2br(safe_text($post['body']));
+				$text = preg_replace('/^(&gt;&gt;No\.|&gt;&gt;)(\d+)/m', '<a href="#${2}">${1}${2}</a>', $text);
+				$text = preg_replace('/^(&gt;)(.*)$/m', '<span class="quote">${1}${2}</span>', $text);
+				return $text;
 			}
 		}
 		return '無本文';

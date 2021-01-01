@@ -52,7 +52,7 @@ class ib_post
 
 	public static function batch($ids, $status)
 	{
-		if (!is_array($ids) OR count($ids) > 200)
+		if (!is_array($ids) OR count($ids) > 1000)
 		{
 			return;
 		}
