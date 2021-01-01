@@ -1,0 +1,13 @@
+<?php if ($this->user_id) { ?>
+	|
+	<span><?php echo safe_text($this->user_info['user_name']); ?></span>
+	<?php if (ib_h::is_mod($this->user_info)) { ?>
+	|
+	<a href="<?php echo ib_h::url(); ?>/mod/settings/">設定</a>
+	<?php } ?>
+	|
+	<form style="display:inline;" action="<?php echo url_rewrite(); ?>/account/logout/" method="post"><a href="<?php echo url_rewrite(); ?>/account/logout/" onclick="$(this).parent().submit();return false;">登出</a></form>
+<?php } else { ?>
+	|
+	<a href="<?php echo url_rewrite(); ?>/login/">登入</a>
+<?php } ?>
