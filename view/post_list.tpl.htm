@@ -1,0 +1,58 @@
+<?php foreach ($this->items as $item) { ?>
+<?php $thread = $item['thread']; ?>
+<?php $thread_url = ib_h::url('/thread/' . $thread['id']); ?>
+<?php $pid = $thread['id']; ?>
+<div id="post_<?php echo $pid; ?>">
+
+	<div class="post op">
+		<p class="intro">
+			<input type="checkbox" class="delete" name="ids[]" value="<?php echo $pid; ?>" id="select_<?php echo $pid; ?>">
+			<label for="select_<?php echo $pid; ?>">
+				<span class="subject"><?php echo ib_fmt::subject($thread); ?></span>
+				<span class="name"><?php echo ib_fmt::name($thread); ?></span>
+				<time><?php echo ib_fmt::time($thread); ?></time>
+			</label>
+			<a class="post_no" href="#post_<?php echo $pid; ?>">No.</a><a class="post_no" href="#post_<?php echo $pid; ?>"><?php echo $pid; ?></a>
+			<?php if (!$this->thread_id) { ?>
+			<a href="<?php echo $thread_url; ?>">[回應]</a>
+			<?php } ?>
+		</p>
+		<?php if ($thread['file_type'] == 1) { ?>
+		<div class="file">
+			<a href="<?php echo safe_text($thread['file']); ?>" target="_blank">
+				<img class="post-image" src="<?php echo safe_text($thread['file']); ?>" alt="">
+			</a>
+		</div>
+		<?php } ?>
+		<div class="body"><?php echo ib_fmt::body($thread); ?></div>
+	</div>
+
+<?php foreach ($item['replies'] as $reply) { ?>
+<?php $pid = $reply['id']; ?>
+
+	<div class="post reply" id="post_<?php echo $pid; ?>">
+		<p class="intro">
+			<input type="checkbox" class="delete" name="ids[]" value="<?php echo $pid; ?>" id="select_<?php echo $pid; ?>">
+			<label for="select_<?php echo $pid; ?>">
+				<span class="subject"><?php echo ib_fmt::subject($reply); ?></span>
+				<span class="name"><?php echo ib_fmt::name($reply); ?></span>
+				<time><?php echo ib_fmt::time($reply); ?></time>
+			</label>
+			<a class="post_no" href="#post_<?php echo $pid; ?>">No.</a><a class="post_no" href="#post_<?php echo $pid; ?>"><?php echo $pid; ?></a>
+		</p>
+		<?php if ($reply['file_type'] == 1) { ?>
+		<div class="file">
+			<a href="<?php echo safe_text($reply['file']); ?>" target="_blank">
+				<img class="post-image" src="<?php echo safe_text($reply['file']); ?>" alt="">
+			</a>
+		</div>
+		<?php } ?>
+		<div class="body"><?php echo ib_fmt::body($reply); ?></div>
+	</div>
+
+	<br>
+<?php } ?>
+	<br class="clear">
+	<hr>
+</div>
+<?php } ?>

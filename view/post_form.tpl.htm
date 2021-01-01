@@ -1,0 +1,25 @@
+<table>
+<?php if ($this->thread_id) { ?>
+	<tr>
+		<td colspan="2">
+			<div class="banner">
+				回應模式
+				<a class="unimportant" href="<?php echo ib_h::url(); ?>/">[Return]</a>
+			</div>
+			<input type="hidden" name="thread_id" value="<?php echo $this->thread_id; ?>">
+		</td>
+	</tr>
+<?php } ?>
+	<tr>
+		<th>標　題</th>
+		<td>
+			<input style="float:left;" type="text" name="subject" size="25" maxlength="100" placeholder="選填"><input accesskey="s" style="margin-left:2px;" type="submit" name="post" value="送　出"><span style="white-space:nowrap;<?php if (!$this->user_id) { ?>visibility:hidden;<?php } ?>"><input id="input_anonymous" name="anonymous" type="checkbox" checked><label for="input_anonymous">匿名發送</label></span>
+		</td>
+	</tr>
+	<tr>
+		<th>內　文</th>
+		<td>
+			<textarea style="width:100%;"  name="body" id="body" rows="5" cols="35" placeholder="請填寫此項"></textarea>
+		</td>
+	</tr>
+</table>

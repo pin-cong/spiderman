@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+<?php TPL::include('head', 'imageboard'); ?>
+</head>
+<body>
+<div class="bar top">
+<?php TPL::include('nav', 'imageboard'); ?>
+</div>
+
+<header>
+<?php TPL::include('header', 'imageboard'); ?>
+</header>
+
+<form action="<?php echo ib_h::url(); ?>/post/reply/" method="post">
+<?php TPL::include('post_form', 'imageboard'); ?>
+</form>
+
+<hr>
+	|
+	<a href="<?php echo ib_h::url(); ?>/">Home</a>
+<hr>
+
+<form action="<?php echo ib_h::url(); ?>/mod/batch/" method="post">
+<?php $this->items[] = $this->item; ?>
+<?php TPL::include('post_list', 'imageboard'); ?>
+
+<div class="bar bottom">
+	<div class="pages">
+<?php TPL::include('pagination', 'imageboard'); ?>
+		|
+		<a href="<?php echo ib_h::url(); ?>/">Return</a>
+	</div>
+<?php TPL::include('post_moderation', 'imageboard'); ?>
+</div>
+</form>
+
+<footer>
+<?php TPL::include('footer', 'imageboard'); ?>
+</footer>
+
+</body>
+</html>

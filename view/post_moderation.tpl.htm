@@ -1,0 +1,13 @@
+<?php if (ib_h::is_mod($this->user_info)) { ?>
+<div style="float: right;">
+	<input type="hidden" value="<?php echo intval($_GET['page']); ?>" name="page">
+	<input type="hidden" value="<?php echo intval($this->thread_id); ?>" name="thread_id">
+	<input id="input_restore" value="0" type="radio" name="status"><label for="input_restore">恢復</label>
+	|
+	<input id="input_delete" value="1" type="radio" name="status"><label for="input_delete">刪除</label>
+	|
+	<input id="input_replace" value="2" type="radio" name="status"><label for="input_replace">替換</label>
+	|
+	<input type="submit" value="提交">
+</div>
+<?php } ?>

@@ -1,0 +1,44 @@
+<?php TPL::include('global/header.tpl.htm'); ?>
+
+<div class="aw-container-wrap">
+	<div class="container">
+		<div class="row">
+			<div class="aw-content-wrap clearfix">
+				<div class="aw-padding-y-30">
+					<div class="aw-mod aw-replay-box">
+						<p>&nbsp;</p>
+
+						<form action="<?php echo $this->action_url; ?>" onsubmit="return false;" method="post" id="settings_form">
+
+						<div class="mod-body">
+							<a href="javascript:;" onclick="AWS.submit($('#settings_form'), $(this));" class="btn btn-normal btn-success pull-right btn-reply"><?php _e('保存'); ?></a>
+						</div>
+
+						<p class="clearfix"></p>
+
+						<div class="mod-body">
+							<div class="aw-mod">
+							<?php foreach ($this->fields AS $key => $val) { ?>
+								<div class="mod-head aw-padding-y-10">
+									<div><?php echo htmlspecialchars($val); ?></div>
+									<textarea class="form-control autosize" rows="2" name="<?php echo $key; ?>"><?php echo htmlspecialchars($this->settings[$key]); ?></textarea>
+								</div>
+							<?php } ?>
+							</div>
+						</div>
+
+						<div class="mod-body">
+							<a href="javascript:;" onclick="AWS.submit($('#settings_form'), $(this));" class="btn btn-normal btn-success pull-right btn-reply"><?php _e('保存'); ?></a>
+						</div>
+
+						</form>
+
+					</div>
+
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<?php TPL::include('global/footer.tpl.htm'); ?>
