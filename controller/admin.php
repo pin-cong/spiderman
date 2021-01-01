@@ -48,10 +48,11 @@ class admin extends AWS_CONTROLLER
 			'imageboard_moderator_group_ids' => '普通管理用戶組 ID(s) ","分隔',
 			'imageboard_post_replacing_limit' => '替換全文次數限制',
 			'imageboard_anonymous_interval_post' => '匿名用戶發串冷卻秒數',
-			'imageboard_captcha_reputation_lt' => '聲望小於多少需要驗證碼 (留空則關閉)',
+			'imageboard_captcha_reputation_lt' => '聲望小於多少需要驗證碼 (留空則不開啟)',
 			'imageboard_hcaptcha_sitekey' => 'hcaptcha sitekey',
 			'imageboard_hcaptcha_secret' => 'hcaptcha secret',
 			'imageboard_hcaptcha_hostname' => 'hcaptcha hostname',
+			'imageboard_disallow_anonymous_reputation_lt' => '聲望小於多少不允許匿名 (留空則不開啟)',
 		);
 	}
 

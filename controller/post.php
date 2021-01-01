@@ -114,13 +114,19 @@ class post extends AWS_CONTROLLER
 
 	private function get_uid(&$data)
 	{
+		$data['uid'] = intval($this->user_id);
+		if (!$data['uid'])
+		{
+			return;
+		}
 		if ($_POST['anonymous'])
 		{
+			$reputation_lt = S::get('imageboard_disallow_anonymous_reputation_lt');
+			if (is_numeric($reputation_lt) AND $this->user_info['reputation'] < $reputation_lt)
+			{
+				return;
+			}
 			$data['uid'] = 0;
-		}
-		else
-		{
-			$data['uid'] = intval($this->user_id);
 		}
 	}
 
