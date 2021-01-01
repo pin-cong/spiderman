@@ -43,6 +43,7 @@ class main extends AWS_CONTROLLER
 			'page' => $_GET['page'],
 			'per_page' => $per_page,
 			'show_all' => ib_h::is_mod($this->user_info),
+			'recent_replies_per_thread' => S::get('imageboard_recent_replies_per_thread'),
 		));
 
 		if (!$items AND !!$_GET['page'])

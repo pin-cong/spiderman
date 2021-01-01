@@ -82,7 +82,7 @@ class post extends AWS_CONTROLLER
 
 		$data['thread_id'] = $item['thread_id'];
 		$data['sage'] = $item['sage'];
-		$data['recent_replies_per_thread'] = S::get_int('imageboard_recent_replies_per_thread');
+		$data['recent_replies_per_thread'] = S::get('imageboard_recent_replies_per_thread');
 
 		ib_post::reply($data);
 

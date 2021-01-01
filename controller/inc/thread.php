@@ -58,6 +58,8 @@ class ib_thread
 			return array();
 		}
 
+		$recent_replies_per_thread = intval($opts['recent_replies_per_thread']);
+
 		foreach ($list as $key => $val)
 		{
 			// 收集用于一次查询
@@ -66,14 +68,17 @@ class ib_thread
 			{
 				$post_ids[] = $thread_id;
 			}
-			$recent_reply_ids = $val['recent_reply_ids'];
-			if (!$recent_reply_ids)
+			if ($recent_replies_per_thread < 1 OR !$val['recent_reply_ids'])
 			{
 				$recent_reply_ids = array();
 			}
 			else
 			{
-				$recent_reply_ids = array_map('intval', explode(',', $recent_reply_ids));
+				$recent_reply_ids = array_map('intval', explode(',', $val['recent_reply_ids']));
+				if (count($recent_reply_ids) > $recent_replies_per_thread)
+				{
+					$recent_reply_ids = array_slice($recent_reply_ids, -$recent_replies_per_thread);
+				}
 			}
 			foreach ($recent_reply_ids as $reply_id)
 			{
@@ -145,7 +150,7 @@ class ib_thread
 			// 第一页同时获取主串和回复
 			$per_page += 1;
 			$where = 'id = ' . $thread_id . ' OR thread_id = ' . $thread_id;
-			$post_list = AWS_APP::model()->fetch_page('imageboard_post', $where, 'id ASC', $page, $per_page);
+			$post_list = AWS_APP::model()->fetch_page('imageboard_post', $where, 'thread_id ASC, id ASC', $page, $per_page);
 			if (!$post_list)
 			{
 				return array();

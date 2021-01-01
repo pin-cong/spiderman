@@ -82,7 +82,7 @@ class admin extends AWS_CONTROLLER
 		$per_page = intval($_GET['per_page']);
 		if ($per_page < 1) $per_page = 100;
 
-		$recent_replies_per_thread = S::get_int('imageboard_recent_replies_per_thread');
+		$recent_replies_per_thread = S::get('imageboard_recent_replies_per_thread');
 
 		if ($threads = $this->model()->fetch_page('imageboard_post', 'thread_id = 0', 'id ASC', $page, $per_page))
 		{
