@@ -169,6 +169,7 @@ class ib_post
 			'body' => htmlspecialchars($opts['body']),
 			'file' => htmlspecialchars($opts['file']),
 			'file_type' => intval($opts['file_type']),
+			'time' => fake_time(),
 		));
 		if (!$post_id)
 		{

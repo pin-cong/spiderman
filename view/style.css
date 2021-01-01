@@ -192,7 +192,6 @@ div.post p {
 div.post div.body {
   margin-top: 0.8em;
   padding-bottom: 0.3em;
-  white-space: pre-wrap;
 }
 div.post.reply div.body {
   margin-left: 1.8em;

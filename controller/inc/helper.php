@@ -81,7 +81,7 @@ class ib_h
 		if ($text)
 		{
 			$text = htmlspecialchars_decode($text);
-			$text = truncate_text($text, 150);
+			$text = truncate_text($text, 100);
 			$text .= ' - ';
 		}
 		$text .= S::get('imageboard_page_title');

@@ -76,7 +76,7 @@ class ib_fmt
 		{
 			return '';
 		}
-		return safe_text($item['title'] . "\r\n\r\n" . $item['message']);
+		return nl2br(safe_text($item['title'] . "\n\n" . $item['message']));
 	}
 
 	public static function subject(&$post)
@@ -131,7 +131,7 @@ class ib_fmt
 			}
 			else
 			{
-				return safe_text($post['body']);
+				return nl2br(safe_text($post['body']));
 			}
 		}
 		return '無本文';
