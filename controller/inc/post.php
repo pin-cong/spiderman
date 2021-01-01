@@ -31,6 +31,29 @@ class ib_post
 		return $post;
 	}
 
+	public static function get_last_post($thread_id)
+	{
+		$thread_id = intval($thread_id);
+		if ($thread_id < 1)
+		{
+			return array();
+		}
+
+		$where = [
+			['thread_id', 'eq', $thread_id],
+			'or',
+			['id', 'eq', $thread_id],
+		];
+		$order = 'id DESC';
+
+		$post = AWS_APP::model()->fetch_row('imageboard_post', $where, $order);
+		if (!$post)
+		{
+			return array();
+		}
+		return $post;
+	}
+
 	public static function update($id, $opts)
 	{
 		$id = intval($id);

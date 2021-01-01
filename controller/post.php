@@ -78,6 +78,7 @@ class post extends AWS_CONTROLLER
 		}
 
 		$this->check_thread_time($item['thread_id']);
+		$this->check_reply_time($item['thread_id']);
 
 		$this->check_captcha();
 		$this->get_uid($data);
@@ -198,6 +199,26 @@ class post extends AWS_CONTROLLER
 		}
 
 		if ($post = ib_post::get($post_id))
+		{
+			$seconds = $days * 24 * 3600;
+			$time_before = real_time() - $seconds;
+
+			if (intval($post['time']) < $time_before)
+			{
+				ib_h::redirect_msg('已失去時效性');
+			}
+		}
+	}
+
+	private function check_reply_time($post_id)
+	{
+		$days = S::get_int('imageboard_reply_expiration_days');
+		if (!$days)
+		{
+			return;
+		}
+
+		if ($post = ib_post::get_last_post($post_id))
 		{
 			$seconds = $days * 24 * 3600;
 			$time_before = real_time() - $seconds;
