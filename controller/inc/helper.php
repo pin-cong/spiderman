@@ -88,4 +88,14 @@ class ib_h
 		return $text;
 	}
 
+	public static function emoticons()
+	{
+		static $list;
+		if (!isset($list))
+		{
+			$list = S::get_key_value_pairs('imageboard_emoticons', null, true);
+		}
+		return $list;
+	}
+
 }

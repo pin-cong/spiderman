@@ -19,7 +19,18 @@
 	<tr>
 		<th>內　文</th>
 		<td>
-			<textarea style="width:100%;"  name="body" id="body" rows="5" cols="35" placeholder="請填寫此項"></textarea>
+			<textarea style="width:100%;" name="body" rows="5" cols="35" placeholder="請填寫此項"></textarea>
+		</td>
+	</tr>
+	<tr>
+		<th>表　情</th>
+		<td>
+			<select onchange="var field=$(this).closest('form').find('*[name=body]'),text=field.val();field.val(text+$(this).find(':selected').text());">
+				<option></option>
+<?php foreach (ib_h::emoticons() as $key => $val) { ?>
+				<option><?php echo htmlspecialchars($key); ?></option>
+<?php } ?>
+			</select>
 		</td>
 	</tr>
 </table>

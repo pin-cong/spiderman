@@ -34,6 +34,7 @@ class mod extends AWS_CONTROLLER
 
 		$this->setting_fields = array(
 			'imageboard_post_replacing_keywords' => '如果貼文中出現以下關鍵詞則替換全文',
+			'imageboard_emoticons' => '常用表情',
 		);
 	}
 
