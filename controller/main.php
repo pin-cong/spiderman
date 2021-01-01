@@ -42,7 +42,7 @@ class main extends AWS_CONTROLLER
 		$items = ib_thread::list(array(
 			'page' => $_GET['page'],
 			'per_page' => $per_page,
-			'show_all' => ib_h::is_mod($this->user_info),
+			'is_mod' => ib_h::is_mod($this->user_info),
 			'recent_replies_per_thread' => S::get('imageboard_recent_replies_per_thread'),
 		));
 
@@ -72,7 +72,7 @@ class main extends AWS_CONTROLLER
 			'id' => $_GET['id'],
 			'page' => $_GET['page'],
 			'per_page' => $per_page,
-			'show_all' => ib_h::is_mod($this->user_info),
+			'is_mod' => ib_h::is_mod($this->user_info),
 		));
 
 		if (!$item)

@@ -22,7 +22,7 @@ class ib_post
 			return array();
 		}
 
-		$where = 'id = ' . $id;
+		$where = ['id', 'eq', $id];
 		$post = AWS_APP::model()->fetch_row('imageboard_post', $where);
 		if (!$post)
 		{
@@ -39,7 +39,7 @@ class ib_post
 			return;
 		}
 
-		$where = 'id = ' . $id;
+		$where = ['id', 'eq', $id];
 		AWS_APP::model()->update('imageboard_post', array(
 			'uid' => intval($opts['uid']),
 			'subject' => htmlspecialchars($opts['subject']),
@@ -52,23 +52,18 @@ class ib_post
 
 	public static function batch($ids, $status)
 	{
-		if (!is_array($ids) OR count($ids) > 1000)
+		if (!is_array($ids) OR !$ids OR count($ids) > 1000)
 		{
 			return;
 		}
 		$ids = array_map('intval', $ids);
-		if (!$ids)
-		{
-			return;
-		}
-		$ids = implode(',', $ids);
 
-		$where = "id IN(" . $ids . ")";
+		$where = ['id', 'in', $ids];
 		AWS_APP::model()->update('imageboard_post', array(
 			'status' => intval($status),
 		), $where);
 
-		$where = "thread_id IN(" . $ids . ")";
+		$where = ['thread_id', 'in', $ids];
 		AWS_APP::model()->update('imageboard_index', array(
 			'status' => intval($status),
 		), $where);
@@ -78,7 +73,11 @@ class ib_post
 	{
 		$thread_id = intval($thread_id);
 
-		$where = '`thread_id` = ' . ($thread_id) . ' OR `id` = ' . ($thread_id);
+		$where = [
+			['thread_id', 'eq', $thread_id],
+			'or',
+			['id', 'eq', $thread_id],
+		];
 		$order = 'id DESC';
 
 		$id = AWS_APP::model()->fetch_one('imageboard_post', 'id', $where, $order);
@@ -93,24 +92,17 @@ class ib_post
 		{
 			return array();
 		}
+		$thread_id = intval($thread_id);
 
-		$table = AWS_APP::model()->get_table('imageboard_post');
-		$where = '`thread_id` = ' . intval($thread_id);
-		$order = 'id DESC';
-		$sql = 'SELECT `id` FROM `' . $table . '` WHERE ' . $where . ' ORDER BY ' . $order . ' LIMIT ' . $limit;
+		$where = ['thread_id', 'eq', $thread_id];
 
-		$rows = AWS_APP::model()->query_all($sql);
-		if (!$rows)
+		$reply_ids = AWS_APP::model()->fetch_column('imageboard_post', 'id', $where, 'id DESC', $limit);
+		if (!$reply_ids)
 		{
 			return array();
 		}
 
-		$reply_ids = array();
-		foreach ($rows as $row)
-		{
-			array_unshift($reply_ids, $row['id']);
-		}
-		return $reply_ids;
+		return array_reverse($reply_ids);
 	}
 
 	public static function upsert_index($thread_id, $recent_replies_per_thread)
@@ -123,7 +115,7 @@ class ib_post
 			return;
 		}
 
-		$where = '`thread_id` = ' . ($thread_id);
+		$where = ['thread_id', 'eq', $thread_id];
 
 		$data = array(
 			'reply_count' => AWS_APP::model()->count('imageboard_post', $where),
@@ -189,7 +181,7 @@ class ib_post
 
 		$recent_reply_ids = self::get_recent_reply_ids($thread_id, $opts['recent_replies_per_thread']);
 		$data = array(
-			'reply_count' => AWS_APP::model()->count('imageboard_post', 'thread_id = ' . ($thread_id)),
+			'reply_count' => AWS_APP::model()->count('imageboard_post', ['thread_id', 'eq', $thread_id]),
 			'recent_reply_ids' => implode(',', $recent_reply_ids),
 		);
 		if (!$opts['sage'])
@@ -197,7 +189,7 @@ class ib_post
 			$data['last_post_id'] = $post_id;
 		}
 
-		AWS_APP::model()->update('imageboard_index', $data, 'thread_id = ' . ($thread_id));
+		AWS_APP::model()->update('imageboard_index', $data, ['thread_id', 'eq', $thread_id]);
 
 		return $post_id;
 	}

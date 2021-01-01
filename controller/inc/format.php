@@ -115,9 +115,9 @@ class ib_fmt
 		{
 			if (!!$post['user_info'])
 			{
-				$url = url_rewrite('/people/') . $post['user_info']['url_token'];
+				$url = url_rewrite('/people/') . safe_url_encode($post['user_info']['user_name']);
 				$name = $post['user_info']['user_name'];
-				return '<a href="' . safe_text($url) . '">' . safe_text($name) . '</a>';
+				return '<a href="' . $url . '">' . safe_text($name) . '</a>';
 			}
 		}
 		return '無名';

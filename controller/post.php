@@ -66,7 +66,7 @@ class post extends AWS_CONTROLLER
 
 		$item = ib_thread::info(array(
 			'id' => $_POST['thread_id'],
-			'show_all' => ib_h::is_mod($this->user_info),
+			'is_mod' => ib_h::is_mod($this->user_info),
 		));
 		if (!$item)
 		{
@@ -97,7 +97,7 @@ class post extends AWS_CONTROLLER
 	private function get_content(&$data)
 	{
 		$data['subject'] = trim($_POST['subject']);
-		if (cjk_strlen($data['subject']) > 150)
+		if (iconv_strlen($data['subject']) > 150)
 		{
 			ib_h::redirect_msg('標題太長');
 		}
@@ -106,7 +106,7 @@ class post extends AWS_CONTROLLER
 		{
 			ib_h::redirect_msg('請填寫');
 		}
-		if (cjk_strlen($data['body']) > S::get_int('imageboard_body_length_limit'))
+		if (iconv_strlen($data['body']) > S::get_int('imageboard_body_length_limit'))
 		{
 			ib_h::redirect_msg('太長了');
 		}

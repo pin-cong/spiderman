@@ -42,10 +42,10 @@ class ib_thread
 
 	public static function list($opts)
 	{
-		$where = '';
-		if (!$opts['show_all'])
+		$where = [];
+		if (!$opts['is_mod'])
 		{
-			$where .= 'masked = 0';
+			$where[] = ['masked', 'eq', 0];
 		}
 
 		$page = self::intval_gt0($opts['page']);
@@ -96,7 +96,7 @@ class ib_thread
 		}
 		//$post_ids = array_unique($post_ids);
 
-		$post_list = AWS_APP::model()->fetch_all('imageboard_post', "id IN(" . implode(',', $post_ids) . ")");
+		$post_list = AWS_APP::model()->fetch_all('imageboard_post', ['id', 'in', $post_ids]);
 		if (!$post_list)
 		{
 			return array();
@@ -149,7 +149,11 @@ class ib_thread
 		{
 			// 第一页同时获取主串和回复
 			$per_page += 1;
-			$where = 'id = ' . $thread_id . ' OR thread_id = ' . $thread_id;
+			$where = [
+				['id', 'eq', $thread_id],
+				'or',
+				['thread_id', 'eq', $thread_id],
+			];
 			$post_list = AWS_APP::model()->fetch_page('imageboard_post', $where, 'thread_id ASC, id ASC', $page, $per_page);
 			if (!$post_list)
 			{
@@ -167,13 +171,13 @@ class ib_thread
 		}
 		else
 		{
-			$where = 'thread_id = ' . $thread_id;
+			$where = ['thread_id', 'eq', $thread_id];
 			$replies = AWS_APP::model()->fetch_page('imageboard_post', $where, 'id ASC', $page, $per_page);
 			if (!$replies)
 			{
 				return array();
 			}
-			$where = 'id = ' . $thread_id;
+			$where = ['id', 'eq', $thread_id];
 			$thread = AWS_APP::model()->fetch_row('imageboard_post', $where);
 			if (!$thread)
 			{
@@ -222,10 +226,10 @@ class ib_thread
 			return array();
 		}
 
-		$where = 'thread_id = ' . $id;
-		if (!$opts['show_all'])
+		$where[] = ['thread_id', 'eq', $id];
+		if (!$opts['is_mod'])
 		{
-			$where .= ' AND masked = 0';
+			$where[] = ['masked', 'eq', 0];
 		}
 
 		$item = AWS_APP::model()->fetch_row('imageboard_index', $where);
