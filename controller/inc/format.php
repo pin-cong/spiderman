@@ -14,12 +14,59 @@
 
 class ib_fmt
 {
+	private static function get_kb_item($id)
+	{
+		static $cache;
+
+		if (!$cache[$id])
+		{
+			if ($item = AWS_APP::model('kb')->get($id))
+			{
+				$cache[$id] = $item;
+			}
+		}
+
+		return $cache[$id];
+	}
+
+	private static function get_kb_id($post_id)
+	{
+		$key = 'imageboard_post_' . $post_id;
+
+		static $cache;
+		if ($cache[$key])
+		{
+			return $cache[$key];
+		}
+
+		$kb_count = AWS_APP::model('kb')->size();
+		if (!$kb_count)
+		{
+			return 0;
+		}
+
+		$num = checksum($key);
+		$kb_id = $num % $kb_count + 1;
+		$cache[$key] = $kb_id;
+		return $kb_id;
+	}
+
+	private static function get_kb($post_id)
+	{
+		$id = self::get_kb_id($post_id);
+		if (!$item = self::get_kb_item($id))
+		{
+			return '';
+		}
+		return $item['title'] . '<br><br>' . FORMAT::bbcode($item['message']);
+	}
+
 	public static function subject(&$post)
 	{
 		if ($post['status'] == 2)
 		{
 			$post['file_type'] = 0;
-			$post['body'] = '';
+			$post['body'] = self::get_kb($post['id']);
 			return '<i>已替換</i>';
 		}
 		else if ($post['status'] == 1)
@@ -51,7 +98,14 @@ class ib_fmt
 	{
 		if (!!$post['body'])
 		{
-			return safe_text($post['body']);
+			if (!!$post['status'])
+			{
+				return $post['body'];
+			}
+			else
+			{
+				return safe_text($post['body']);
+			}
 		}
 		return '無本文';
 	}
