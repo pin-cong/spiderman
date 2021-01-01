@@ -53,6 +53,24 @@ class ib_fmt
 
 	private static function get_kb($post_id)
 	{
+		static $limit;
+		if (!isset($limit))
+		{
+			$limit = S::get_int('imageboard_post_replacing_limit');
+		}
+
+		static $ref_count;
+		if (!isset($ref_count))
+		{
+			$ref_count = 1;
+		}
+
+		if ($ref_count > $limit)
+		{
+			return ''; // 超出次數限制
+		}
+		$ref_count = $ref_count + 1;
+
 		$id = self::get_kb_id($post_id);
 		if (!$item = self::get_kb_item($id))
 		{
