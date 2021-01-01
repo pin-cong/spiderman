@@ -51,7 +51,7 @@ class ib_thread
 		$page = self::intval_gt0($opts['page']);
 		$per_page = self::intval_gt0($opts['per_page']);
 
-		$list = AWS_APP::model()->fetch_page('imageboard_index', $where, 'sort DESC, last_post_id DESC', $page, $per_page);
+		$list = AWS_APP::model()->fetch_page('imageboard_index', $where, 'sort DESC, status ASC, last_post_id DESC', $page, $per_page);
 		self::$_total_threads = AWS_APP::model()->total_rows();
 		if (!$list)
 		{

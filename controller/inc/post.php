@@ -52,13 +52,24 @@ class ib_post
 
 	public static function batch($ids, $status)
 	{
+		if (!is_array($ids) OR count($ids) > 200)
+		{
+			return;
+		}
 		$ids = array_map('intval', $ids);
 		if (!$ids)
 		{
 			return;
 		}
-		$where = "id IN(" . implode(',', $ids) . ")";
+		$ids = implode(',', $ids);
+
+		$where = "id IN(" . $ids . ")";
 		AWS_APP::model()->update('imageboard_post', array(
+			'status' => intval($status),
+		), $where);
+
+		$where = "thread_id IN(" . $ids . ")";
+		AWS_APP::model()->update('imageboard_index', array(
 			'status' => intval($status),
 		), $where);
 	}
